@@ -146,11 +146,12 @@ class RegisterActivity : AppCompatActivity() {
         deleteButton?.setOnClickListener {
 
         }
-//        val toolbar
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            toolbar = findViewById<View>(R.id.toolbar_detail) as Toolbar
-//            toolbar.setNavigationOnClickListener { finish() }
-//        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val toolbar = findViewById<View>(R.id.toolbar_detail) as Toolbar
+            toolbar.setNavigationOnClickListener { finish() }
+        }
+
         progressDialog = ProgressDialog(this, R.style.AppTheme_Dark_Dialog)
         progressDialog!!.isIndeterminate = true
 //        dbHelper = SqlOperations(this)
