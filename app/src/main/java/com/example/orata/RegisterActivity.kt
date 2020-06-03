@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.orata.utils.MyUtilities
 import com.example.orata.utils.NetworkUtilities
 import com.squareup.picasso.Picasso
+import org.apache.commons.net.ftp.FTP
+import org.apache.commons.net.ftp.FTPClient
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -63,7 +65,7 @@ class RegisterActivity : AppCompatActivity() {
     var myusername:kotlin.String? = ""
     var username:kotlin.String? = ""
     var latest = 0
-    val jobList: MutableList<job> = ArrayList<job>()
+//    val jobList: MutableList<job> = ArrayList<job>()
 
     var row_email: RelativeLayout? = null
     var row_phone:RelativeLayout? = null
@@ -144,11 +146,11 @@ class RegisterActivity : AppCompatActivity() {
         deleteButton?.setOnClickListener {
 
         }
-        val toolbar
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            toolbar = findViewById<View>(R.id.toolbar_detail) as Toolbar
-            toolbar.setNavigationOnClickListener { finish() }
-        }
+//        val toolbar
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            toolbar = findViewById<View>(R.id.toolbar_detail) as Toolbar
+//            toolbar.setNavigationOnClickListener { finish() }
+//        }
         progressDialog = ProgressDialog(this, R.style.AppTheme_Dark_Dialog)
         progressDialog!!.isIndeterminate = true
 //        dbHelper = SqlOperations(this)
@@ -224,29 +226,29 @@ class RegisterActivity : AppCompatActivity() {
                 spinner_job!!.setSelection(2)
             }
             old_image = image
-            img_picture!!.isEnabled = false
+            img_picture?.isEnabled = false
             Picasso.with(this).load("https://babelacis.xyz/images/stocksImg/$image")
                 .placeholder(R.mipmap.ic_launcher).into(img_picture)
-            idEditText!!.setText(id)
-            idEditText!!.isFocusable = false
-            idEditText!!.isClickable = false
-            usernameEditText.setText(username)
-            usernameEditText!!.isFocusable = false
-            usernameEditText!!.isClickable = false
+            idEditText?.setText(id)
+            idEditText?.isFocusable = false
+            idEditText?.isClickable = false
+            usernameEditText?.setText(username)
+            usernameEditText?.isFocusable = false
+            usernameEditText?.isClickable = false
             current_password = password
-            emailEditText!!.setText(fullname)
-            emailEditText!!.isFocusable = false
-            emailEditText!!.isClickable = false
-            emailEditText!!.isEnabled = false
-            addressEditText!!.setText(address)
-            addressEditText!!.isFocusable = false
-            addressEditText!!.isClickable = false
-            phoneEditText!!.setText(phone)
-            phoneEditText!!.isFocusable = false
-            phoneEditText!!.isClickable = false
-            genderEditText!!.setText(gender)
-            genderEditText!!.isFocusable = false
-            genderEditText!!.isClickable = false
+            emailEditText?.setText(fullname)
+            emailEditText?.isFocusable = false
+            emailEditText?.isClickable = false
+            emailEditText?.isEnabled = false
+            addressEditText?.setText(address)
+            addressEditText?.isFocusable = false
+            addressEditText?.isClickable = false
+            phoneEditText?.setText(phone)
+            phoneEditText?.isFocusable = false
+            phoneEditText?.isClickable = false
+            genderEditText?.setText(gender)
+            genderEditText?.isFocusable = false
+            genderEditText?.isClickable = false
             if (birthdate != null) {
                 if (birthdate != "") {
                     val x = birthdate.split("-").toTypedArray()
@@ -257,27 +259,27 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
             }
-            dayEditText!!.isFocusable = false
-            dayEditText!!.isClickable = false
+            dayEditText?.isFocusable = false
+            dayEditText?.isClickable = false
             monthEditText?.setFocusable(false)
             monthEditText?.setClickable(false)
             yearEditText?.setFocusable(false)
             yearEditText?.setClickable(false)
-            passwordEditText!!.visibility = View.GONE
-            passwordEditText!!.isFocusable = false
-            passwordEditText!!.isClickable = false
-            pictureEditText!!.setText(image)
-            pictureEditText!!.isFocusable = false
-            pictureEditText!!.isClickable = false
-            row_id!!.visibility = View.GONE
+            passwordEditText?.visibility = View.GONE
+            passwordEditText?.isFocusable = false
+            passwordEditText?.isClickable = false
+            pictureEditText?.setText(image)
+            pictureEditText?.isFocusable = false
+            pictureEditText?.isClickable = false
+            row_id?.visibility = View.GONE
             row_fullname?.setVisibility(View.GONE)
-            spinner_job!!.isEnabled = false
+            spinner_job?.isEnabled = false
         } else {
-            row_id!!.visibility = View.VISIBLE
-            idEditText!!.setText("" + (latest + 1))
-            idEditText!!.isEnabled = false
+            row_id?.visibility = View.VISIBLE
+            idEditText?.setText("" + (latest + 1))
+            idEditText?.isEnabled = false
             row_fullname?.setVisibility(View.GONE)
-            img_picture!!.setImageResource(R.drawable.select_image)
+            img_picture?.setImageResource(R.drawable.ic_launcher_background)
         }
     }
 
@@ -357,7 +359,7 @@ class RegisterActivity : AppCompatActivity() {
                 try {
                     val thumbnail =
                         MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri)
-                    img_picture!!.setImageBitmap(thumbnail)
+                    img_picture?.setImageBitmap(thumbnail)
                     val imageurl = getRealPathFromURI(imageUri)
                     Log.d("tes", "URL image ---> $imageurl")
                     val timeStamp =
@@ -377,7 +379,7 @@ class RegisterActivity : AppCompatActivity() {
                         MediaStore.Images.Media.DATA
                     )
                     // Get the cursor
-                    val cursor: Cursor? = getContentResolver().query(selectedImage, filePathColumn, null, null, null)
+                    val cursor: Cursor? = selectedImage?.let { getContentResolver().query(it, filePathColumn, null, null, null) }
                     // Move to first row
                     cursor?.moveToFirst()
                     //Get the column index of MediaStore.Images.Media.DATA
@@ -386,14 +388,14 @@ class RegisterActivity : AppCompatActivity() {
                     val imgDecodableString = columnIndex?.let { cursor?.getString(it) }
                     cursor?.close()
                     // Set the Image in ImageView after decoding the String
-                    img_picture!!.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString))
+                    img_picture?.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString))
                     Log.d("tes", "Connecting ftp ..")
                     val timeStamp =
                         SimpleDateFormat("yyyyMMddHHmmss").format(Date())
                     new_image_name = "profile_galery$timeStamp.png"
                     file_picture = createTempFile(BitmapFactory.decodeFile(imgDecodableString))
                 }
-                CAMERA_REQUEST_CODE -> img_picture!!.setImageURI(Uri.parse(cameraFilePath))
+                CAMERA_REQUEST_CODE -> img_picture?.setImageURI(Uri.parse(cameraFilePath))
             }
         }
     }
@@ -437,7 +439,7 @@ class RegisterActivity : AppCompatActivity() {
             conn.setRequestProperty("Accept", "application/json")
             conn.setRequestProperty("Authorization", "Bearer $token")
             val response = conn.inputStream
-            val jsonReply: String = NetworkUtilities().convertStreamToString(response)
+            val jsonReply: String = convertStreamToString(response)
             Log.d("tes", "Response : $jsonReply")
             val data = JSONArray(jsonReply)
             if (data != null) {
@@ -461,51 +463,51 @@ class RegisterActivity : AppCompatActivity() {
                 return
             }
             R.id.editButton -> {
-                saveButton!!.visibility = View.VISIBLE
-                buttonLayout!!.visibility = View.GONE
-                fullnameEditText!!.isEnabled = true
-                fullnameEditText!!.isFocusableInTouchMode = true
-                fullnameEditText!!.isClickable = true
-                addressEditText!!.isEnabled = true
-                addressEditText!!.isFocusableInTouchMode = true
-                addressEditText!!.isClickable = true
-                phoneEditText!!.isEnabled = true
-                phoneEditText!!.isFocusableInTouchMode = true
-                phoneEditText!!.isClickable = true
-                genderEditText!!.isEnabled = true
-                genderEditText!!.isFocusableInTouchMode = true
-                genderEditText!!.isClickable = true
-                dayEditText!!.isEnabled = true
-                dayEditText!!.isFocusableInTouchMode = true
-                dayEditText!!.isClickable = true
+                saveButton?.visibility = View.VISIBLE
+                buttonLayout?.visibility = View.GONE
+                fullnameEditText?.isEnabled = true
+                fullnameEditText?.isFocusableInTouchMode = true
+                fullnameEditText?.isClickable = true
+                addressEditText?.isEnabled = true
+                addressEditText?.isFocusableInTouchMode = true
+                addressEditText?.isClickable = true
+                phoneEditText?.isEnabled = true
+                phoneEditText?.isFocusableInTouchMode = true
+                phoneEditText?.isClickable = true
+                genderEditText?.isEnabled = true
+                genderEditText?.isFocusableInTouchMode = true
+                genderEditText?.isClickable = true
+                dayEditText?.isEnabled = true
+                dayEditText?.isFocusableInTouchMode = true
+                dayEditText?.isClickable = true
                 monthEditText?.setEnabled(true)
                 monthEditText?.setFocusableInTouchMode(true)
                 monthEditText?.setClickable(true)
                 yearEditText?.setEnabled(true)
                 yearEditText?.setFocusableInTouchMode(true)
                 yearEditText?.setClickable(true)
-                passwordEditText!!.isEnabled = true
-                passwordEditText!!.isFocusableInTouchMode = true
-                passwordEditText!!.isClickable = true
-                usernameEditText!!.isEnabled = true
-                usernameEditText!!.isFocusableInTouchMode = true
-                usernameEditText!!.isClickable = true
-                pictureEditText!!.isEnabled = true
-                pictureEditText!!.isFocusableInTouchMode = true
-                pictureEditText!!.isClickable = true
-                spinner_job!!.isEnabled = true
-                img_picture!!.isEnabled = true
+                passwordEditText?.isEnabled = true
+                passwordEditText?.isFocusableInTouchMode = true
+                passwordEditText?.isClickable = true
+                usernameEditText?.isEnabled = true
+                usernameEditText?.isFocusableInTouchMode = true
+                usernameEditText?.isClickable = true
+                pictureEditText?.isEnabled = true
+                pictureEditText?.isFocusableInTouchMode = true
+                pictureEditText?.isClickable = true
+                spinner_job?.isEnabled = true
+                img_picture?.isEnabled = true
                 Log.d("tes", myusername + " ---- " + username)
                 if (myusername != username) {
-                    usernameEditText!!.isEnabled = false
-                    fullnameEditText!!.isEnabled = false
-                    addressEditText!!.isEnabled = false
-                    phoneEditText!!.isEnabled = false
-                    genderEditText!!.isEnabled = false
-                    dayEditText!!.isEnabled = false
-                    monthEditText.setEnabled(false)
-                    yearEditText.setEnabled(false)
-                    img_picture!!.isEnabled = false
+                    usernameEditText?.isEnabled = false
+                    fullnameEditText?.isEnabled = false
+                    addressEditText?.isEnabled = false
+                    phoneEditText?.isEnabled = false
+                    genderEditText?.isEnabled = false
+                    dayEditText?.isEnabled = false
+                    monthEditText?.setEnabled(false)
+                    yearEditText?.setEnabled(false)
+                    img_picture?.isEnabled = false
                 }
                 return
             }
@@ -516,8 +518,8 @@ class RegisterActivity : AppCompatActivity() {
                         "Yes"
                     ) { dialog, id ->
                         if (deleteUser(
-                                idEditText!!.text.toString(),
-                                usernameEditText!!.text.toString()
+                                idEditText?.text.toString(),
+                                usernameEditText?.text.toString()
                             )
                         ) {
                             Toast.makeText(
@@ -548,15 +550,15 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun persistUser() {
-        if (usernameEditText!!.text.toString() != "" &&
+        if (usernameEditText?.text.toString() != "" &&
             selected_level != "" &&
-            emailEditText!!.text.toString() != "" &&
-            phoneEditText!!.text.toString() != "null" &&
-            phoneEditText!!.text.toString() != "" &&
-            genderEditText!!.text.toString() != "" &&
-            addressEditText!!.text.toString() != "" &&
-            dayEditText!!.text.toString() != "null" &&
-            dayEditText!!.text.toString() != "" &&
+            emailEditText?.text.toString() != "" &&
+            phoneEditText?.text.toString() != "null" &&
+            phoneEditText?.text.toString() != "" &&
+            genderEditText?.text.toString() != "" &&
+            addressEditText?.text.toString() != "" &&
+            dayEditText?.text.toString() != "null" &&
+            dayEditText?.text.toString() != "" &&
             monthEditText?.getText().toString() != "null" &&
             monthEditText?.getText().toString() != "" &&
             yearEditText?.getText().toString() != "null" &&
@@ -567,29 +569,29 @@ class RegisterActivity : AppCompatActivity() {
                 if (userID > 0) {
                     if (myusername == username) {
                         if (new_image_name == "") {
-                            if (passwordEditText!!.text.toString() != "") {
-                                current_password = passwordEditText!!.text.toString()
+                            if (passwordEditText?.text.toString() != "") {
+                                current_password = passwordEditText?.text.toString()
                             }
                             if (updateUser(
-                                    usernameEditText!!.text.toString()
+                                    usernameEditText?.text.toString()
                                     ,
                                     selected_level
                                     ,
-                                    emailEditText!!.text.toString()
+                                    emailEditText?.text.toString()
                                     ,
-                                    passwordEditText!!.text.toString()
+                                    passwordEditText?.text.toString()
                                     ,
-                                    genderEditText!!.text.toString()
+                                    genderEditText?.text.toString()
                                     ,
-                                    addressEditText!!.text.toString()
+                                    addressEditText?.text.toString()
                                     ,
                                     old_image
                                     ,
-                                    yearEditText.getText()
-                                        .toString() + "-" + monthEditText.getText()
-                                        .toString() + "-" + dayEditText!!.text.toString()
+                                    yearEditText?.getText()
+                                        .toString() + "-" + monthEditText?.getText()
+                                        .toString() + "-" + dayEditText?.text.toString()
                                     ,
-                                    phoneEditText!!.text.toString()
+                                    phoneEditText?.text.toString()
                                 )
                             ) {
                                 Toast.makeText(
@@ -607,8 +609,8 @@ class RegisterActivity : AppCompatActivity() {
                             finish()
                         } else {
                             if (sendFileViaFTP(file_picture)) {
-                                if (passwordEditText!!.text.toString() != "") {
-                                    current_password = passwordEditText!!.text.toString()
+                                if (passwordEditText?.text.toString() != "") {
+                                    current_password = passwordEditText?.text.toString()
                                 }
                                 if (updateUser(
                                         usernameEditText?.text.toString()
@@ -627,9 +629,9 @@ class RegisterActivity : AppCompatActivity() {
                                         ,
                                         yearEditText?.getText()
                                             .toString() + "-" + monthEditText?.getText()
-                                            .toString() + "-" + dayEditText!!.text.toString()
+                                            .toString() + "-" + dayEditText?.text.toString()
                                         ,
-                                        phoneEditText!!.text.toString()
+                                        phoneEditText?.text.toString()
                                     )
                                 ) {
                                     Toast.makeText(
@@ -648,7 +650,7 @@ class RegisterActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        if (updateUserJob(usernameEditText!!.text.toString(), selected_level)) {
+                        if (updateUserJob(usernameEditText?.text.toString(), selected_level)) {
                             showMessage("User job updated")
                         } else {
                             showMessage("Fail update user job")
@@ -657,14 +659,14 @@ class RegisterActivity : AppCompatActivity() {
                 } else {
                     if (sendFileViaFTP(file_picture)) {
                         if (addUser(
-                                usernameEditText!!.text.toString()
+                                usernameEditText?.text.toString()
                                 , selected_level
-                                , emailEditText!!.text.toString()
-                                , passwordEditText!!.text.toString()
-                                , genderEditText!!.text.toString()
-                                , addressEditText!!.text.toString()
-                                , pictureEditText!!.text.toString()
-                                , dayEditText!!.text.toString()
+                                , emailEditText?.text.toString()
+                                , passwordEditText?.text.toString()
+                                , genderEditText?.text.toString()
+                                , addressEditText?.text.toString()
+                                , pictureEditText?.text.toString()
+                                , dayEditText?.text.toString()
                             )
                         ) {
                             Toast.makeText(
@@ -940,7 +942,7 @@ class RegisterActivity : AppCompatActivity() {
         return false
     }
 
-    open fun convertStreamToString(`is`: InputStream): String? {
+    open fun convertStreamToString(`is`: InputStream): String {
         val reader = BufferedReader(InputStreamReader(`is`))
         val sb = StringBuilder()
         var line: String? = null
