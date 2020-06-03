@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#FF1300</color>
+    <color name="colorPrimaryDark">#B60700</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="putih">#ffffff</color>
+    <color name="color_line">#BDBDBD</color>-->
+    <color name="colorPrimary">#228B22</color>
+    <color name="colorPrimaryDark">#2E8B57</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="putih">#ffffff</color>
+    <color name="color_line">#BDBDBD</color>
+
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="main_color">#a81c51</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="orange">#FA0</color>
+    <color name="red">#ff0000</color>
+    <color name="red_notif">#D45A52</color>
+    <color name="red_notif_button">#f59696</color>
+    <color name="green_notif">#7bbd2b</color>
+    <color name="color_clicked">#DBDBDB</color>
+
+</resources>
