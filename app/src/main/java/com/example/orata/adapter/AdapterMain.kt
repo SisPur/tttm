@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orata.R
 import com.example.orata.data.ModelProduct
-import com.example.orata.ui.Detail.DetailActivity
+import com.example.orata.DetailActivity
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 

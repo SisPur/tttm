@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -28,6 +29,7 @@ import com.example.orata.ui.Sample.model.DataStaff
 import com.example.orata.ui.Sample.model.ResultData
 import com.example.orata.ui.Sample.model2.DataProduk
 import com.example.orata.ui.Sample.model2.ResultProduk
+import com.example.orata.utils.auth.AuthSnapshot
 import com.example.orata.utils.auth.AuthTableHelper
 import retrofit2.Call
 import retrofit2.Response
@@ -46,7 +48,14 @@ class HomeActivity : AppCompatActivity() {
 
         authHelper = AuthTableHelper(this, null)
 
-        supportActionBar?.title = "TTTM"
+        if (!authHelper?.getAuth()!!.getToken().equals("-")) {
+
+            supportActionBar?.title = "Hi, "+authHelper?.getAuth()!!.getName()
+        }
+        else {
+            supportActionBar?.title = "TTTM"
+        }
+
         supportActionBar?.elevation = 0F
 
         svProduct = findViewById(R.id.scrollview)
@@ -230,9 +239,42 @@ class HomeActivity : AppCompatActivity() {
                 logout()
             }
             R.id.action_cart -> {
-                startActivity(intent)
+                if(isLogin()) {
+                    startActivity(intent)
+                }
+                else{
+                    intent = Intent(applicationContext, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun isLogin () : Boolean {
+        var checkViaAPI = true
+        if (authHelper != null) {
+            var data : AuthSnapshot? = authHelper?.getAuth()
+            if (data != null) {
+                if (!TextUtils.isEmpty(authHelper?.getAuth()!!.getToken())) {
+                    if (!authHelper?.getAuth()!!.getToken().equals("-")) {
+                        checkViaAPI = false
+                    }
+                }
+            }
+            else {
+                Log.d("tes","No user detected");
+            }
+        }
+        else {
+            Log.d("tes","auth empty");
+        }
+
+        if (!checkViaAPI) {
+            return true
+        }
+
+        return false
     }
 }
